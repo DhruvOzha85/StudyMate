@@ -1,8 +1,8 @@
 // StudyMate API Service
 // -------------------------------------------------------------
 // Environments:
-// 1. Production (Render): replace with your live Render backend URL after Step 3
-export const RENDER_API_URL = 'https://studymate-server.onrender.com/api/tasks';
+// 1. Production (Render): live backend URL
+export const RENDER_API_URL = 'https://studymate-8oxm.onrender.com/api/tasks';
 
 // 2. Local Wi-Fi (Physical Android device via Expo Go):
 export const LOCAL_WIFI_API_URL = 'http://192.168.31.33:5000/api/tasks';
@@ -12,7 +12,7 @@ export const EMULATOR_API_URL = 'http://10.0.2.2:5000/api/tasks';
 
 // ACTIVE API BASE URL:
 // Toggle between RENDER_API_URL, LOCAL_WIFI_API_URL, or EMULATOR_API_URL
-export const API_BASE_URL = LOCAL_WIFI_API_URL;
+export const API_BASE_URL = RENDER_API_URL;
 
 // 1. Fetch all tasks
 export const getTasks = async () => {

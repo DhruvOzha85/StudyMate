@@ -139,7 +139,7 @@ StudyMate/
 4. Test the health endpoint: `https://<your-service-name>.onrender.com/` (returns `{ "message": "StudyMate API is running." }`).
 5. In `studymate-mobile/src/api/taskApi.js`, set `API_BASE_URL` to your live Render endpoint:
    ```javascript
-   export const API_BASE_URL = 'https://<your-service-name>.onrender.com/api/tasks';
+   export const API_BASE_URL = 'https://studymate-8oxm.onrender.com/api/tasks';
    ```
 
 ---
