@@ -1,0 +1,31 @@
+{
+  "expo": {
+    "name": "studymate-mobile",
+    "slug": "studymate-mobile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.dhruvozhaxd.studymate",
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "d6824cba-bc6d-4bac-a5c8-d2cb63a99fc6"
+      }
+    },
+    "owner": "dhruvozhaxd"
+  }
+}
