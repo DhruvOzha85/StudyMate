@@ -12,6 +12,12 @@ import {
 import { createTask, getTaskById, updateTask } from '../api/taskApi';
 import { colors, spacing, borderRadius } from '../styles/theme';
 
+const addDays = (n) => {
+  const d = new Date();
+  d.setDate(d.getDate() + n);
+  return d.toISOString().split('T')[0];
+};
+
 export default function TaskFormScreen({ route, navigation }) {
   const taskId = route.params?.taskId;
   const isEditing = Boolean(taskId);
@@ -41,7 +47,7 @@ export default function TaskFormScreen({ route, navigation }) {
             setDueDate(new Date(task.dueDate).toISOString().split('T')[0]);
           }
         } catch (err) {
-          Alert.alert('Error', 'Failed to load task details for editing.', [
+          Alert.alert('Error', err.message || 'Failed to load task details for editing.', [
             { text: 'Go Back', onPress: () => navigation.goBack() },
           ]);
         } finally {
@@ -184,6 +190,22 @@ export default function TaskFormScreen({ route, navigation }) {
 
       {/* Due Date */}
       <Text style={styles.label}>Due Date (YYYY-MM-DD) *</Text>
+      <View style={styles.presetRow}>
+        {[
+          { label: 'Today', days: 0 },
+          { label: 'Tomorrow', days: 1 },
+          { label: 'Next Week', days: 7 },
+        ].map((p) => (
+          <TouchableOpacity
+            key={p.label}
+            style={styles.presetChip}
+            onPress={() => setDueDate(addDays(p.days))}
+            disabled={submitting}
+          >
+            <Text style={styles.presetText}>{p.label}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
       <TextInput
         style={styles.input}
         placeholder="YYYY-MM-DD"
@@ -274,6 +296,24 @@ const styles = StyleSheet.create({
   },
   textArea: {
     height: 100,
+  },
+  presetRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+    marginBottom: spacing.xs,
+  },
+  presetChip: {
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: borderRadius.full,
+  },
+  presetText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: colors.accent,
   },
   priorityRow: {
     flexDirection: 'row',

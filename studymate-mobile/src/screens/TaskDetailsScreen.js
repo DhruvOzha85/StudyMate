@@ -98,6 +98,11 @@ export default function TaskDetailsScreen({ route, navigation }) {
     }
   };
 
+  const handleRetry = () => {
+    setLoading(true);
+    loadTask();
+  };
+
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -112,9 +117,14 @@ export default function TaskDetailsScreen({ route, navigation }) {
       <View style={styles.errorContainer}>
         <Text style={styles.errorTitle}>Task Unavailable</Text>
         <Text style={styles.errorSubtitle}>{error || 'The requested task could not be found.'}</Text>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.backButtonText}>Go Back</Text>
-        </TouchableOpacity>
+        <View style={styles.errorActionsRow}>
+          <TouchableOpacity style={styles.retryButton} onPress={handleRetry}>
+            <Text style={styles.retryButtonText}>Retry</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+            <Text style={styles.backButtonText}>Go Back</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }
@@ -423,14 +433,31 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: spacing.md,
   },
-  backButton: {
+  errorActionsRow: {
+    flexDirection: 'row',
+    gap: spacing.sm,
+  },
+  retryButton: {
     backgroundColor: colors.primary,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: borderRadius.md,
   },
-  backButtonText: {
+  retryButtonText: {
     color: '#FFFFFF',
+    fontWeight: '600',
+    fontSize: 14,
+  },
+  backButton: {
+    backgroundColor: colors.card,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: borderRadius.md,
+  },
+  backButtonText: {
+    color: colors.text,
     fontWeight: '600',
     fontSize: 14,
   },
