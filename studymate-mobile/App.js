@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -7,11 +7,15 @@ import DashboardScreen from './src/screens/DashboardScreen';
 import MyTasksScreen from './src/screens/MyTasksScreen';
 import TaskFormScreen from './src/screens/TaskFormScreen';
 import TaskDetailsScreen from './src/screens/TaskDetailsScreen';
+import { warmUpServer } from './src/api/taskApi';
 import { colors } from './src/styles/theme';
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  useEffect(() => {
+    warmUpServer();
+  }, []);
   return (
     <NavigationContainer>
       <StatusBar style="dark" backgroundColor={colors.background} />
