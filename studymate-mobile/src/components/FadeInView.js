@@ -79,3 +79,35 @@ export function FloatingView({ children, style }) {
     </Animated.View>
   );
 }
+
+// Smooth pulsing dot for active timer & live indicators
+export function PulseDot({ color = '#EA580C', active = true }) {
+  const scale = useRef(new Animated.Value(1)).current;
+
+  useEffect(() => {
+    if (!active) {
+      scale.setValue(1);
+      return;
+    }
+    const loop = Animated.loop(
+      Animated.sequence([
+        Animated.timing(scale, { toValue: 1.45, duration: 700, useNativeDriver: true }),
+        Animated.timing(scale, { toValue: 1, duration: 700, useNativeDriver: true }),
+      ])
+    );
+    loop.start();
+    return () => loop.stop();
+  }, [active]);
+
+  return (
+    <Animated.View
+      style={{
+        width: 8,
+        height: 8,
+        borderRadius: 4,
+        backgroundColor: color,
+        transform: [{ scale }],
+      }}
+    />
+  );
+}
