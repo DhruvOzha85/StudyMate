@@ -10,7 +10,8 @@ import {
   Alert,
 } from 'react-native';
 import { createTask, getTaskById, updateTask } from '../api/taskApi';
-import { colors, spacing, borderRadius } from '../styles/theme';
+import FadeInView, { ScalePressable } from '../components/FadeInView';
+import { colors, spacing, borderRadius, cardShadow } from '../styles/theme';
 
 const addDays = (n) => {
   const d = new Date();
@@ -20,14 +21,17 @@ const addDays = (n) => {
 
 export default function TaskFormScreen({ route, navigation }) {
   const taskId = route.params?.taskId;
+  const duplicateTask = route.params?.duplicateTask;
   const isEditing = Boolean(taskId);
 
   // Form states
-  const [title, setTitle] = useState('');
-  const [subject, setSubject] = useState('');
-  const [description, setDescription] = useState('');
-  const [priority, setPriority] = useState('Medium');
-  const [dueDate, setDueDate] = useState('');
+  const [title, setTitle] = useState(duplicateTask ? `${duplicateTask.title} (Copy)` : '');
+  const [subject, setSubject] = useState(duplicateTask?.subject || '');
+  const [description, setDescription] = useState(duplicateTask?.description || '');
+  const [priority, setPriority] = useState(duplicateTask?.priority || 'Medium');
+  const [dueDate, setDueDate] = useState(
+    duplicateTask?.dueDate ? new Date(duplicateTask.dueDate).toISOString().split('T')[0] : ''
+  );
 
   // UI state
   const [loadingTask, setLoadingTask] = useState(isEditing);
