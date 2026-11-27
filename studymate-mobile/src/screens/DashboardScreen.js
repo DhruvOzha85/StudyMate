@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { getTasks } from '../api/taskApi';
-import FadeInView, { ScalePressable, FloatingView } from '../components/FadeInView';
+import FadeInView, { ScalePressable, FloatingView, PulseDot } from '../components/FadeInView';
 import { colors, spacing, borderRadius, cardShadow } from '../styles/theme';
 
 const heroBg = require('../../assets/hero-bg.jpg');
@@ -180,7 +180,10 @@ export default function DashboardScreen({ navigation }) {
           <FadeInView delay={100}>
             <View style={styles.timerCard}>
               <View>
-                <Text style={styles.timerLabel}>FOCUS SPRINT</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                  <PulseDot color={timerRunning ? colors.accent : colors.teal} active={timerRunning} />
+                  <Text style={styles.timerLabel}>FOCUS SPRINT</Text>
+                </View>
                 <Text style={styles.timerClock}>{mins}:{secs}</Text>
               </View>
               <View style={styles.timerBtns}>
@@ -197,6 +200,20 @@ export default function DashboardScreen({ navigation }) {
                   <Text style={styles.timerResetText}>Reset</Text>
                 </TouchableOpacity>
               </View>
+            </View>
+          </FadeInView>
+
+          {/* Daily Study Tip Banner */}
+          <FadeInView delay={120}>
+            <View style={styles.tipBanner}>
+              <PulseDot color={colors.accent} active={true} />
+              <Text style={styles.tipText}>
+                {progress === 100 && total > 0
+                  ? 'All caught up! Great job finishing your assignments.'
+                  : highPriority > 0
+                  ? `${highPriority} high-priority task(s) need attention today.`
+                  : 'Stay consistent—start a 25-min Focus Sprint above!'}
+              </Text>
             </View>
           </FadeInView>
 
@@ -307,7 +324,9 @@ const styles = StyleSheet.create({
   secondaryBtnText: { color: colors.primary, fontWeight: '700', fontSize: 15 },
   heroCard: { borderRadius: borderRadius.lg, overflow: 'hidden', marginBottom: spacing.md, ...cardShadow },
   heroImg: { borderRadius: borderRadius.lg },
-  heroOverlay: { padding: spacing.md, backgroundColor: 'rgba(24, 24, 27, 0.35)' },
+  heroOverlay: { padding: spacing.md, backgroundColor: 'rgba(28, 25, 23, 0.45)' },
+  tipBanner: { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: colors.surface, paddingHorizontal: spacing.md, paddingVertical: 10, borderRadius: borderRadius.md, marginBottom: spacing.md, borderWidth: 1, borderColor: colors.border },
+  tipText: { flex: 1, fontSize: 13, fontWeight: '600', color: colors.text },
   progressTitle: { color: '#E4E4E7', fontSize: 13, fontWeight: '600' },
   progressPct: { color: '#FFFFFF', fontSize: 20, fontWeight: '800' },
   progressTrack: { height: 8, backgroundColor: 'rgba(255,255,255,0.22)', borderRadius: borderRadius.full, marginVertical: spacing.sm, overflow: 'hidden' },
