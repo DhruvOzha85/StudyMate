@@ -1,191 +1,106 @@
-# StudyMate – Student Assignment & Task Management Application
+# CampusFix — Campus Issue Reporting & Management App
 
-StudyMate is a clean, minimal, and beginner-friendly mobile application built for college students to track academic assignments, study tasks, subjects, deadlines, and priorities.
-
-Developed as a College Diwali Assignment.
+**CampusFix** ("Making Campus Better, Together.") is a mobile application built with React Native and Expo SDK 58 that helps university students report campus maintenance issues, attach photos, track resolution progress, and support issues raised by fellow students.
 
 ---
 
-## 1. Features
-- **Dashboard Overview:** Live counts for Total, Pending, Completed, and High-Priority tasks, plus upcoming deadlines.
-- **My Tasks Filter:** View tasks categorized by `All`, `Pending`, and `Completed` with instant status toggling directly from list items.
-- **Dual-Mode Task Form:** Unified form to create new assignments or update existing ones with date and field validation.
-- **Task Details & Management:** Full view of task notes, due dates, inline completion toggle, and delete with confirmation dialog.
-- **Real Cloud Persistence:** Powered by an Express.js REST API and persistent MongoDB Atlas cloud database (zero mock data).
+## 1. Problem Statement
+
+Students frequently encounter broken classroom equipment, plumbing leaks, electrical faults, Wi-Fi dead zones, and hostel maintenance issues without a clear way to report them or track their status. CampusFix centralizes reporting, tracking, and community prioritization in one clean mobile app.
 
 ---
 
-## 2. Tech Stack
+## 2. Key Features
 
-### Frontend
-- **React Native** & **Expo SDK 58**
-- **Expo Go Client** (compatible with 58.0.5)
-- **React Native 0.88.1** & **React 19.3.0**
-- **React Navigation Native Stack (v7)**
-- **JavaScript only** (No TypeScript, No Redux, No Zustand)
-- Native **Fetch API** & **StyleSheet**
+### Core Screens (10 Screens)
+1. **Splash Screen:** Branded Forest Green & Warm Ivory launch screen with Lottie pulse animation and automatic session routing.
+2. **Onboarding (3 Slides):** Real campus photography introducing issue reporting, live tracking, and community support.
+3. **Authentication:** Login, Create Account, and Forgot Password flows with university email validation.
+4. **Home Dashboard:** Personalized greeting, campus hero banner, live summary stats (Total, In Progress, Resolved), quick actions, and recent activity feed.
+5. **Report an Issue:** Title, category chips, campus location selector, priority, description, gallery/camera photo upload (`expo-image-picker`), anonymous toggle, and Lottie confirmation modal with generated reference ID (`CF-2026-XXXX`).
+6. **Explore Issues:** Search bar, category & status filters, and Recent/Popular sorting.
+7. **Issue Details:** Photo gallery, metadata, 5-step vertical status timeline (`Submitted` → `Acknowledged` → `Assigned` → `In Progress` → `Resolved`), staff response notes, and discussion comments.
+8. **My Reports:** Filterable tabs (`All`, `Pending`, `In Progress`, `Resolved`, `Drafts`) for user-submitted reports.
+9. **Notifications:** Activity feed with unread indicators, tap-to-read, and "Mark all as read".
+10. **Profile & Settings:** Student profile card, report stats, inline name editing, notification preference toggle, help/about dialogs, and logout.
 
-### Backend
-- **Node.js** (v22+ / v24)
-- **Express.js** (v4.21)
-- **MongoDB Atlas** with **Mongoose** (v8.9)
-- **CORS** and **dotenv** middleware
-
-### Production & Build
-- **Render:** Cloud hosting for the Express backend.
-- **EAS Build:** Cloud-based standalone Android APK generation (`preview` / `production` profile).
-- **GitHub:** Source code management.
+### 3 Additional Practical Features
+- **Community Support ("Issue Affects Me Too"):** Students can upvote existing issues with duplicate-vote prevention (`supportedByMe`) and `· Popular` badges.
+- **Campus Location Explorer:** Interactive 10-zone campus map grid (`Block A`, `Block B`, `Library`, `Main Building`, `Computer Laboratory`, `Science Laboratory`, `Cafeteria`, `Hostel`, `Sports Ground`, `Parking Area`) with live issue count badges and `+ Report Here` shortcut.
+- **Offline Report Drafts:** Save, edit, and delete drafts locally when offline (`Waiting for Connection` indicator) and submit once online.
 
 ---
 
-## 3. Project Structure
+## 3. Design System & Visual Identity
+
+- **Primary Background:** Warm Ivory (`#F6F4EF`), Soft White (`#FFFFFF`)
+- **Brand Primary:** Forest Green (`#285C4D`), Deep Green (`#1D4036`)
+- **Secondary Accents:** Muted Sage (`#A8B8A1`), Terracotta (`#C8754B`), Warm Sand (`#E7DDCE`), Soft Beige (`#EFEAE0`)
+- **Photography:** Royalty-free campus photographs stored locally in `studymate-mobile/src/assets/images/` (`campus-hero.jpg`, `campus-library.jpg`, `campus-walkway.jpg`).
+
+---
+
+## 4. Technology Stack
+
+- **Mobile Framework:** React Native `0.88.1`, Expo SDK `~58.1.0`, React `19.3.0` (JavaScript / JSX)
+- **Navigation:** `@react-navigation/native`, `@react-navigation/native-stack`, `@react-navigation/bottom-tabs`
+- **Animations & Gestures:** `react-native-reanimated`, `react-native-gesture-handler`, `react-native-worklets`, `lottie-react-native`
+- **Device & Storage:** `expo-image-picker`, `@react-native-async-storage/async-storage`, `@expo/vector-icons`, `expo-font`
+
+---
+
+## 5. Where Login & App Data Are Stored
+
+Currently, CampusFix stores all session and report data **locally on the device** using **`AsyncStorage`** (no remote authentication server is connected):
+
+| Data | AsyncStorage Key | Purpose |
+|---|---|---|
+| **Logged-in User Session** | `campusfix_user` | Stores `{ name, email, role }` on Login / Create Account; cleared on Logout |
+| **Onboarding Flag** | `campusfix_onboarded` | Remembers whether the 3-slide onboarding was completed |
+| **Issues & Comments** | `campusfix_issues_v1` | Stores seeded + newly submitted issues, comments, and `supportedByMe` votes |
+| **Offline Drafts** | `campusfix_drafts_v1` | Stores drafts saved offline (`Waiting for Connection`) |
+| **Notifications** | `campusfix_notifications_v1` | Stores status alerts and read/unread state |
+
+*(The `studymate-server/` folder contains the separate Express + MongoDB backend from the earlier StudyMate task API phase.)*
+
+---
+
+## 6. Project Structure
 
 ```text
-StudyMate/
-├── README.md
-├── .gitignore
-│
-├── studymate-server/               # Express & MongoDB Backend
-│   ├── .env.example                # Template for environment variables
-│   ├── package.json
-│   ├── server.js                   # Server entry, DB connection & 0.0.0.0 binding
-│   ├── models/
-│   │   └── Task.js                 # Task schema & Mongoose model
-│   └── routes/
-│       └── taskRoutes.js           # 5 REST CRUD endpoints
-│
-└── studymate-mobile/               # Expo SDK 58 Mobile Frontend
-    ├── App.js                      # Root navigator (Native Stack)
-    ├── app.json                    # Expo config & EAS project linking
-    ├── eas.json                    # EAS build configuration (APK output)
-    ├── package.json
-    └── src/
-        ├── api/
-        │   └── taskApi.js          # Centralized API URLs & fetch helpers
-        ├── screens/
-        │   ├── DashboardScreen.js  # Live statistics & recent tasks
-        │   ├── MyTasksScreen.js    # Filterable task list (All/Pending/Completed)
-        │   ├── TaskFormScreen.js   # Dual Add/Edit form
-        │   └── TaskDetailsScreen.js# Task details, status toggle & delete
-        └── styles/
-            └── theme.js            # Standard colors and spacing tokens
+studymate-mobile/
+├── App.js
+├── app.json
+├── eas.json
+├── assets/
+│   ├── icon.png                        # CampusFix app icon (1024x1024)
+│   ├── android-icon-foreground.png     # Android adaptive icon foreground
+│   └── splash-icon.png
+└── src/
+    ├── assets/
+    │   ├── animations/                 # Lottie JSONs (splash-pulse, success-check, empty-box)
+    │   └── images/                     # Local campus photography
+    ├── components/                     # Reusable UI & AnimatedCard components
+    ├── constants/theme.js              # Warm Ivory & Forest Green design tokens
+    ├── navigation/AppNavigator.js      # Stack + 5-Tab Bottom Navigator
+    ├── screens/                        # 11 screens (Splash → Profile + LocationExplorer)
+    └── services/issueService.js        # AsyncStorage data & seed service
 ```
 
 ---
 
-## 4. Local Setup Instructions
+## 7. Local Setup & APK Build
 
-### Prerequisites
-- Node.js (v22.13 or later)
-- Git
-- Expo Go app on your Android device (or Android Emulator)
-
-### Step 1: Clone and Run the Backend
-1. Open a terminal and navigate to the backend folder:
-   ```bash
-   cd studymate-server
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Create your `.env` file from `.env.example`:
-   ```env
-   PORT=5000
-   MONGODB_URI=your_mongodb_atlas_connection_string
-   ```
-4. Start the server:
-   ```bash
-   npm start
-   ```
-   *The server starts on `http://localhost:5000` and binds to `0.0.0.0`.*
-
-### Step 2: Run the Mobile Frontend
-1. Open a new terminal and navigate to the frontend folder:
-   ```bash
-   cd studymate-mobile
-   ```
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-3. Configure your API IP in `src/api/taskApi.js`:
-   - For physical device on same Wi-Fi: use your computer's LAN IP (e.g. `http://192.168.x.x:5000/api/tasks`).
-   - For Android Emulator: use `http://10.0.2.2:5000/api/tasks`.
-4. Start Expo:
-   ```bash
-   npx expo start
-   ```
-5. Press `a` for Android Emulator, or scan the QR code with **Expo Go** on your Android phone.
-
----
-
-## 5. Render Backend Deployment
-
-1. Push this repository to your GitHub account.
-2. In the [Render Dashboard](https://dashboard.render.com/):
-   - Click **New** ➔ **Web Service**.
-   - Connect your GitHub repository.
-   - Configure:
-     - **Name:** `studymate-server`
-     - **Root Directory:** `studymate-server`
-     - **Runtime:** `Node`
-     - **Build Command:** `npm install`
-     - **Start Command:** `node server.js`
-   - In **Environment Variables**, add:
-     - `PORT`: `5000`
-     - `MONGODB_URI`: `<Your MongoDB Atlas Connection String>`
-3. Click **Deploy Web Service**.
-4. Test the health endpoint: `https://<your-service-name>.onrender.com/` (returns `{ "message": "StudyMate API is running." }`).
-5. In `studymate-mobile/src/api/taskApi.js`, set `API_BASE_URL` to your live Render endpoint:
-   ```javascript
-   export const API_BASE_URL = 'https://studymate-8oxm.onrender.com/api/tasks';
-   ```
-
----
-
-## 6. Standalone Android APK Generation (EAS Build)
-
-The project includes `studymate-mobile/eas.json` configured for direct `.apk` output:
-
-```json
-{
-  "build": {
-    "preview": {
-      "distribution": "internal",
-      "android": {
-        "buildType": "apk"
-      }
-    }
-  }
-}
+### Run Locally
+```bash
+cd studymate-mobile
+npm install
+npx expo start
 ```
+Press `a` for Android Emulator or scan the QR code in **Expo Go**.
 
-To trigger the cloud build:
+### Build Standalone Android APK (EAS)
 ```bash
 cd studymate-mobile
 eas build -p android --profile preview
 ```
-
-Once the cloud build finishes, EAS provides a direct link to download and install the standalone `.apk` on any Android device without needing Expo Go.
-
----
-
-## 7. REST API Endpoints
-
-Base: `/api/tasks`
-
-| Method | Endpoint | Description |
-|---|---|---|
-| `GET` | `/` | Server health check |
-| `GET` | `/api/tasks` | Fetch all tasks |
-| `POST` | `/api/tasks` | Create a new task |
-| `GET` | `/api/tasks/:id` | Get task by ID |
-| `PUT` | `/api/tasks/:id` | Update task or toggle status |
-| `DELETE` | `/api/tasks/:id` | Delete task by ID |
-
----
-
-## 8. License
-Academic project for Diwali assignment evaluation.
-
