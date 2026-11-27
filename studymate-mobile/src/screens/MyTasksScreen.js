@@ -78,6 +78,18 @@ export default function MyTasksScreen({ route, navigation }) {
     }
   };
 
+  // Feature: Quick Priority Cycle (Low -> Medium -> High -> Low)
+  const handleCyclePriority = async (task) => {
+    const order = ['Low', 'Medium', 'High'];
+    const next = order[(order.indexOf(task.priority) + 1) % order.length];
+    try {
+      const updated = await updateTask(task._id, { priority: next });
+      setTasks((prev) => prev.map((t) => (t._id === task._id ? updated : t)));
+    } catch (err) {
+      Alert.alert('Update Failed', err.message || 'Could not update priority.');
+    }
+  };
+
   // Feature: Batch Clear Completed Tasks
   const handleClearCompleted = () => {
     const done = tasks.filter((t) => t.completed);
@@ -133,13 +145,20 @@ export default function MyTasksScreen({ route, navigation }) {
       </View>
 
       <View style={styles.searchRow}>
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search title or subject..."
-          placeholderTextColor={colors.textSecondary}
-          value={search}
-          onChangeText={setSearch}
-        />
+        <View style={styles.searchWrap}>
+          <TextInput
+            style={styles.searchInput}
+            placeholder="Search title or subject..."
+            placeholderTextColor={colors.textSecondary}
+            value={search}
+            onChangeText={setSearch}
+          />
+          {search.length > 0 && (
+            <TouchableOpacity onPress={() => setSearch('')} style={styles.clearSearchBtn}>
+              <Text style={styles.clearSearchText}>×</Text>
+            </TouchableOpacity>
+          )}
+        </View>
         <TouchableOpacity style={styles.sortBtn} onPress={() => setSortByDue((s) => !s)}>
           <Text style={styles.sortText}>{sortByDue ? 'Due ↑' : 'Newest'}</Text>
         </TouchableOpacity>
@@ -217,9 +236,12 @@ export default function MyTasksScreen({ route, navigation }) {
                             <Text style={[styles.pillText, { color: dueTag.color }]}>{dueTag.label}</Text>
                           </View>
                         )}
-                        <View style={[styles.pill, { backgroundColor: pStyle.bg }]}>
-                          <Text style={[styles.pillText, { color: pStyle.color }]}>{item.priority}</Text>
-                        </View>
+                        <TouchableOpacity
+                          style={[styles.pill, { backgroundColor: pStyle.bg }]}
+                          onPress={() => handleCyclePriority(item)}
+                        >
+                          <Text style={[styles.pillText, { color: pStyle.color }]}>{item.priority} ↻</Text>
+                        </TouchableOpacity>
                       </View>
                     </View>
 
@@ -259,7 +281,10 @@ const styles = StyleSheet.create({
   filterText: { fontSize: 13, fontWeight: '700', color: colors.textSecondary },
   filterTextActive: { color: '#FFFFFF' },
   searchRow: { flexDirection: 'row', paddingHorizontal: spacing.md, paddingTop: spacing.sm, gap: spacing.sm },
-  searchInput: { flex: 1, backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border, borderRadius: borderRadius.md, paddingHorizontal: 12, paddingVertical: 9, fontSize: 14, color: colors.text },
+  searchWrap: { flex: 1, flexDirection: 'row', alignItems: 'center', backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border, borderRadius: borderRadius.md, paddingRight: 8 },
+  searchInput: { flex: 1, paddingHorizontal: 12, paddingVertical: 9, fontSize: 14, color: colors.text },
+  clearSearchBtn: { paddingHorizontal: 6, paddingVertical: 2 },
+  clearSearchText: { fontSize: 18, fontWeight: '700', color: colors.textSecondary },
   sortBtn: { backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border, borderRadius: borderRadius.md, paddingHorizontal: 14, justifyContent: 'center' },
   sortText: { fontSize: 13, fontWeight: '700', color: colors.primary },
   chipRow: { flexDirection: 'row', flexWrap: 'wrap', paddingHorizontal: spacing.md, paddingTop: spacing.sm, gap: 6 },
