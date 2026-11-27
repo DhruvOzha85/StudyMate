@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "studymate-mobile",
+    "name": "CampusFix",
     "slug": "studymate-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,7 +12,7 @@
     "android": {
       "package": "com.dhruvozhaxd.studymate",
       "adaptiveIcon": {
-        "backgroundColor": "#E6F4FE",
+        "backgroundColor": "#285C4D",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
@@ -26,6 +26,10 @@
         "projectId": "d6824cba-bc6d-4bac-a5c8-d2cb63a99fc6"
       }
     },
-    "owner": "dhruvozhaxd"
+    "owner": "dhruvozhaxd",
+    "plugins": [
+      "expo-status-bar",
+      "expo-font"
+    ]
   }
 }
