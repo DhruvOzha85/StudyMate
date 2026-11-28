@@ -10,7 +10,7 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.dhruvozhaxd.studymate",
+      "package": "com.dhruvozhaxd.campusfix",
       "adaptiveIcon": {
         "backgroundColor": "#285C4D",
         "foregroundImage": "./assets/android-icon-foreground.png",
