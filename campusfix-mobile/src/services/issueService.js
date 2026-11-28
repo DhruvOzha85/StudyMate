@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Switch between Render production and local dev server
-export const API_ROOT = 'https://studymate-8oxm.onrender.com/api';
+export const API_ROOT = 'https://campusfix-p0fg.onrender.com/api';
 
 const TOKEN_KEY = 'campusfix_token';
 const USER_KEY = 'campusfix_user';
