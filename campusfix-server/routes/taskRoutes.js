@@ -84,9 +84,14 @@ router.put('/:id', async (req, res) => {
       return res.status(400).json({ message: 'Validation failed: dueDate must be a valid date.' });
     }
 
+    const allowed = {};
+    ['title', 'description', 'subject', 'priority', 'dueDate', 'completed'].forEach((k) => {
+      if (req.body[k] !== undefined) allowed[k] = req.body[k];
+    });
+
     const updatedTask = await Task.findByIdAndUpdate(
       id,
-      req.body,
+      allowed,
       { new: true, runValidators: true }
     );
 
